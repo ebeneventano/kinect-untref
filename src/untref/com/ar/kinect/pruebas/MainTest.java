@@ -1,6 +1,5 @@
 package untref.com.ar.kinect.pruebas;
 
-import java.awt.Color;
 
 public class MainTest{
 

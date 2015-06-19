@@ -55,63 +55,64 @@ public class FormTest extends JFrame {
 
 			System.out.println("Iteracion: " + k);
 
-			BufferedImage imagen = new BufferedImage(640, 480,
-					BufferedImage.TYPE_3BYTE_BGR);
+			// BufferedImage imagen = new BufferedImage(640, 480,
+			// BufferedImage.TYPE_3BYTE_BGR);
+			//
+			// for (int i = 0; i < imagen.getHeight(); i++) {
+			// for (int j = 0; j < imagen.getWidth(); j++) {
+			//
+			// int height = imagen.getWidth() * 4 * i;
+			// int blue = j * 4 + height;
+			// int green = j * 4 + 1 + height;
+			// int red = j * 4 + 2 + height;
+			// int alpha = j * 4 + 3 + height;
+			//
+			// Color color = new Color(colores[red] & 0xFF,
+			// colores[green] & 0xFF, colores[blue] & 0xFF,
+			// colores[alpha] & 0xFF);
+			//
+			// imagen.setRGB(j, i, color.getRGB());
+			//
+			// }
+			// }
+			//
+			// for (int i = 0; i < 240; i++) {
+			// for (int j = 0; j < 320; j++) {
+			//
+			// int height = 320 * 3 * i;
+			// int x = j * 3 + height;
+			// int y = j * 3 + 1 + height;
+			// int z = j * 3 + 2 + height;
+			//
+			// if (j == 320 / 2 && i == 240 / 2) {
+			// System.out.print(depth[x]);
+			// System.out.print(" - ");
+			// System.out.print(depth[y]);
+			// System.out.print(" - ");
+			// System.out.println(depth[z]);
+			//
+			// }
+			//
+			// if (true) {
+			//
+			// Color color = new Color((int) ((depth[z] / 4.0) * 255),
+			// 0, 0);
+			//
+			// imagen.setRGB(j, i , color.getRGB());
+			//
+			// }
+			//
+			// }
+			// }
 
-			for (int i = 0; i < imagen.getHeight(); i++) {
-				for (int j = 0; j < imagen.getWidth(); j++) {
+			SensorData data = new SensorData(colores, depth);
 
-					int height = imagen.getWidth() * 4 * i;
-					int blue = j * 4 + height;
-					int green = j * 4 + 1 + height;
-					int red = j * 4 + 2 + height;
-					int alpha = j * 4 + 3 + height;
-
-					Color color = new Color(colores[red] & 0xFF,
-							colores[green] & 0xFF, colores[blue] & 0xFF,
-							colores[alpha] & 0xFF);
-
-					imagen.setRGB(j, i, color.getRGB());
-
-				}
-			}
-
-			for (int i = 0; i < 240; i++) {
-				for (int j = 0; j < 320; j++) {
-
-					int height = 320 * 3 * i;
-					int x = j * 3 + height;
-					int y = j * 3 + 1 + height;
-					int z = j * 3 + 2 + height;
-
-					if (j == 320 / 2 && i == 240 / 2) {
-						System.out.print(depth[x]);
-						System.out.print(" - ");
-						System.out.print(depth[y]);
-						System.out.print(" - ");
-						System.out.println(depth[z]);
-
-					}
-
-					if (true) {
-
-						Color color = new Color((int) ((depth[z] / 4.0) * 255),
-								0, 0);
-
-						imagen.setRGB(j, i , color.getRGB());
-						imagen.setRGB(j, i , color.getRGB());
-
-					}
-
-				}
-			}
-
-			labelPrincipalImage.setIcon(new ImageIcon(imagen));
+			labelPrincipalImage.setIcon(new ImageIcon(data.getDepthImage()));
 
 			this.getContentPane().add(labelPrincipalImage);
 
 			try {
-				Thread.sleep(5);
+				Thread.sleep((1 / 10) * 1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
