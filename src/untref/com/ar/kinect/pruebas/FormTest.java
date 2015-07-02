@@ -1,28 +1,25 @@
 package untref.com.ar.kinect.pruebas;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Timer;
 
-import javax.management.timer.TimerMBean;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class FormTest extends JFrame {
 
+	private Kinect kinect;
+	private Timer timer;
+	private SensorData data;
 	private JLabel labelPrincipalImagen;
 	private JLabel label_x_value;
 	private JLabel label_y_value;
@@ -36,6 +33,9 @@ public class FormTest extends JFrame {
 
 		setupUI();
 		this.pack();
+
+		// setupKinect();
+		// this.timer.scheduleAtFixedRate(new Tarea(this), 0, (1 / 10) * 1000);
 
 		this.setVisible(true);
 	}
@@ -125,7 +125,7 @@ public class FormTest extends JFrame {
 		label_color.setPreferredSize(new Dimension(100, 50));
 		label_color.setBorder(BorderFactory.createLineBorder(Color.black));
 		label_color.setHorizontalAlignment(JLabel.CENTER);
-		label_color.setText("Color");
+		label_color.setText("Color (R,G,B)");
 
 		c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.NORTH;
@@ -201,13 +201,16 @@ public class FormTest extends JFrame {
 
 		label_x_value.setText(String.valueOf(e.getX()));
 		label_y_value.setText(String.valueOf(e.getY()));
-		label_color_value.setText("Color");
-		label_distancia_value.setText("0 m");
+		Color color = data.getColorEnPixel(e.getX(), e.getY());
+		label_color_value.setText("(" + color.getRed() + "," + color.getRed()
+				+ "," + color.getRed() + ")");
+		label_distancia_value.setText(String.valueOf(data.getDistancia(
+				e.getX(), e.getY())));
 	}
 
-	public void mostrarImagen() {
+	private void setupKinect() {
 
-		Kinect kinect = new Kinect();
+		kinect = new Kinect();
 
 		kinect.stop();
 		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ
@@ -224,27 +227,14 @@ public class FormTest extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
-		int k = 0;
-		while (true) {
+	public void actualizar() {
 
-			System.out.println("Iteracion: " + k);
+		data = new SensorData(kinect);
 
-			SensorData data = new SensorData(kinect);
-
-			labelPrincipalImagen.setIcon(new ImageIcon(data
-					.getImagenProfundidad()));
-			this.getContentPane().add(labelPrincipalImagen);
-
-			// Cuadros por segundo
-			try {
-				Thread.sleep((1 / 10) * 1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			k++;
-		}
+		labelPrincipalImagen
+				.setIcon(new ImageIcon(data.getImagenProfundidad()));
+		this.getContentPane().add(labelPrincipalImagen);
 	}
 }
