@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class SensorData {
 
 	private byte[] colorFrame;
-	private float[] depth;
+	private short[] depth;
 	private Color[][] matrizColor;
 	private float[][] matrizProfundidad;
 	private int width;
@@ -17,7 +17,7 @@ public class SensorData {
 	public SensorData(Kinect kinect) {
 
 		this.colorFrame = kinect.getColorFrame();
-		this.depth = kinect.getXYZ();
+		this.depth = kinect.getDepthFrame();
 
 		this.width = kinect.getColorWidth();
 		this.height = kinect.getColorHeight();
@@ -61,12 +61,24 @@ public class SensorData {
 		for (int i = 0; i < 480; i++) {
 			for (int j = 0; j < 640; j++) {
 
-				int height = 640 * 3 * i;
-				// int x = j * 3 + 0 + height;
-				// int y = j * 3 + 1 + height;
-				int z = j * 3 + 2 + height;
+				int height = 640 * i;
+				int z = j + height;
 
-				Color color = new Color((int) ((depth[z] / 4.0) * 255), 0, 0);
+				float max = 30000;
+				float min = 7000;
+				float hue;
+
+				Color color = null;
+				if (depth[z] == 0) {
+					color = Color.gray;
+				} else if (depth[z] > max) {
+					color = Color.black;
+				} else if (depth[z] < min) {
+					color = Color.white;
+				} else {
+					hue = (1 / (max - min)) * (depth[z] - min);
+					color = new Color(Color.HSBtoRGB(hue, 1.0f, 1.0f));
+				}
 
 				this.matrizProfundidad[j][i] = depth[z];
 				imagenProfunidad.setRGB(j, i, color.getRGB());

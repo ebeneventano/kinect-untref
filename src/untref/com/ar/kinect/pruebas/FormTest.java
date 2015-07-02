@@ -29,13 +29,16 @@ public class FormTest extends JFrame {
 	public FormTest() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		// setResizable(false);
 
 		setupUI();
 		this.pack();
 
-		// setupKinect();
-		// this.timer.scheduleAtFixedRate(new Tarea(this), 0, (1 / 10) * 1000);
+		setupKinect();
+		this.timer = new Timer();
+		long period = (1 / 10) * 1000;
+		period = 100;
+		this.timer.scheduleAtFixedRate(new Tarea(this), 0, period);
 
 		this.setVisible(true);
 	}
@@ -49,7 +52,6 @@ public class FormTest extends JFrame {
 		 */
 		labelPrincipalImagen = new JLabel();
 		labelPrincipalImagen.setPreferredSize(new Dimension(640, 480));
-		;
 		labelPrincipalImagen.setBorder(BorderFactory
 				.createLineBorder(Color.black));
 		// labelPrincipalImagen.setHorizontalAlignment(JLabel.CENTER);
@@ -202,23 +204,22 @@ public class FormTest extends JFrame {
 		label_x_value.setText(String.valueOf(e.getX()));
 		label_y_value.setText(String.valueOf(e.getY()));
 		Color color = data.getColorEnPixel(e.getX(), e.getY());
-		label_color_value.setText("(" + color.getRed() + "," + color.getRed()
-				+ "," + color.getRed() + ")");
+		label_color_value.setText("(" + color.getRed() + "," + color.getGreen()
+				+ "," + color.getBlue() + ")");
 		label_distancia_value.setText(String.valueOf(data.getDistancia(
-				e.getX(), e.getY())));
+				e.getX(), e.getY())/100) + " cm");
 	}
 
 	private void setupKinect() {
 
 		kinect = new Kinect();
 
-		kinect.stop();
-		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ
-				| Kinect.PLAYER_INDEX);
-
-		kinect.setElevationAngle(0);
+		// kinect.stop();
 		kinect.setColorResolution(640, 480);
 		kinect.setDepthResolution(640, 480);
+
+		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ
+				| Kinect.PLAYER_INDEX);
 
 		// Espera para el encendido
 		try {
@@ -227,6 +228,8 @@ public class FormTest extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		kinect.setElevationAngle(0);
 	}
 
 	public void actualizar() {
@@ -235,6 +238,5 @@ public class FormTest extends JFrame {
 
 		labelPrincipalImagen
 				.setIcon(new ImageIcon(data.getImagenProfundidad()));
-		this.getContentPane().add(labelPrincipalImagen);
 	}
 }
