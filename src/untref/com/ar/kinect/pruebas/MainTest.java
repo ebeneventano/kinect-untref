@@ -5,9 +5,7 @@ public class MainTest {
 	public static void main(String[] args) {
 
 		FormTest form = new FormTest();
-		form.setVisible(true);
-
-		form.mostrarImagen();
+//		form.mostrarImagen();
 	}
 
 }
