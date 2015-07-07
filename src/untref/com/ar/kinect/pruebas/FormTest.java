@@ -1,6 +1,7 @@
 package untref.com.ar.kinect.pruebas;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class FormTest extends JFrame {
@@ -54,7 +56,6 @@ public class FormTest extends JFrame {
 		labelPrincipalImagen.setPreferredSize(new Dimension(640, 480));
 		labelPrincipalImagen.setBorder(BorderFactory
 				.createLineBorder(Color.black));
-		// labelPrincipalImagen.setHorizontalAlignment(JLabel.CENTER);
 
 		GridBagConstraints c;
 		c = new GridBagConstraints();
@@ -197,6 +198,9 @@ public class FormTest extends JFrame {
 		c.gridx = 2;
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia_value, c);
+		
+		Container contentPane = this.getContentPane();
+		this.setContentPane(new JScrollPane(contentPane));
 	}
 
 	private void updateValues(MouseEvent e) {
