@@ -198,9 +198,11 @@ public class FormTest extends JFrame {
 		c.gridx = 2;
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia_value, c);
-		
+
 		Container contentPane = this.getContentPane();
-		this.setContentPane(new JScrollPane(contentPane));
+		JScrollPane scrollPane = new JScrollPane(contentPane);
+		scrollPane.setBorder(null);
+		this.setContentPane(scrollPane);
 	}
 
 	private void updateValues(MouseEvent e) {
@@ -211,7 +213,7 @@ public class FormTest extends JFrame {
 		label_color_value.setText("(" + color.getRed() + "," + color.getGreen()
 				+ "," + color.getBlue() + ")");
 		label_distancia_value.setText(String.valueOf(data.getDistancia(
-				e.getX(), e.getY())/100) + " cm");
+				e.getX(), e.getY()) / 100) + " cm");
 	}
 
 	private void setupKinect() {
