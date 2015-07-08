@@ -12,9 +12,18 @@ public class SensorData {
 	private int width;
 	private int height;
 	private BufferedImage imagenColor;
-	private BufferedImage imagenProfunidad;
+	private BufferedImage imagenProfundidad;
+
+	public SensorData() {
+
+	}
 
 	public SensorData(Kinect kinect) {
+
+		if (!kinect.isInitialized()) {
+			System.out.println("Falla kinect.");
+			System.exit(2);
+		}
 
 		this.colorFrame = kinect.getColorFrame();
 		this.depth = kinect.getDepthFrame();
@@ -55,8 +64,8 @@ public class SensorData {
 	private void buildMatrizProfundidad() {
 
 		matrizProfundidad = new float[this.getWidth()][this.getHeight()];
-		imagenProfunidad = new BufferedImage(this.getWidth(), this.getHeight(),
-				BufferedImage.TYPE_3BYTE_BGR);
+		imagenProfundidad = new BufferedImage(this.getWidth(),
+				this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
 		for (int i = 0; i < 480; i++) {
 			for (int j = 0; j < 640; j++) {
@@ -81,7 +90,7 @@ public class SensorData {
 				}
 
 				this.matrizProfundidad[j][i] = depth[z];
-				imagenProfunidad.setRGB(j, i, color.getRGB());
+				imagenProfundidad.setRGB(j, i, color.getRGB());
 			}
 		}
 	}
@@ -113,6 +122,6 @@ public class SensorData {
 
 	public BufferedImage getImagenProfundidad() {
 
-		return imagenProfunidad;
+		return imagenProfundidad;
 	}
 }

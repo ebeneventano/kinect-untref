@@ -5,6 +5,7 @@ public class MainTest {
 	public static void main(String[] args) {
 
 		FormTest form = new FormTest();
+		form.start();
 	}
 
 }

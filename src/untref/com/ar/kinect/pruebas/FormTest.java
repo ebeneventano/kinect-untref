@@ -1,11 +1,15 @@
 package untref.com.ar.kinect.pruebas;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -16,9 +20,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
@@ -35,43 +39,57 @@ public class FormTest extends JFrame {
 	private JRadioButton radioColor;
 	private JRadioButton radioProfundidad;
 	private JRadioButton radioAmbos;
+	private float alpha;
+	private boolean testing;
 
 	public FormTest() {
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// setResizable(false);
+		testing = true;
 
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setupUI();
 		this.pack();
 
-		setupKinect();
+		if (!testing)
+			setupKinect();
+
+		this.setVisible(true);
+	}
+
+	public void start() {
+
 		this.timer = new Timer();
 		long period = (1 / 10) * 1000;
 		period = 100;
-		// this.timer.scheduleAtFixedRate(new Tarea(this), 0, period);
-
-		this.setVisible(true);
+		this.timer.scheduleAtFixedRate(new Tarea(this), 0, period);
 	}
 
 	private void setupUI() {
 
 		this.setContentPane(new JPanel(new GridBagLayout()));
+		GridBagConstraints c;
 
 		/*
 		 * Imagen
 		 */
+		JPanel panelImagen = new JPanel(new GridBagLayout());
+		panelImagen.setPreferredSize(new Dimension(640 + 20, 480 + 20));
+		// panelImagen.setBorder(BorderFactory.createLineBorder(Color.black));
+
 		labelPrincipalImagen = new JLabel();
-		labelPrincipalImagen.setPreferredSize(new Dimension(640, 480));
 		labelPrincipalImagen.setBorder(BorderFactory
 				.createLineBorder(Color.black));
+		labelPrincipalImagen.setOpaque(true);
+		labelPrincipalImagen.setBackground(Color.gray);
 
-		GridBagConstraints c;
+		panelImagen.add(labelPrincipalImagen);
+
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridheight = 10;
-		this.getContentPane().add(labelPrincipalImagen, c);
+		c.gridheight = 100;
+		this.getContentPane().add(panelImagen, c);
 
 		labelPrincipalImagen.addMouseListener(new MouseListener() {
 
@@ -239,6 +257,29 @@ public class FormTest extends JFrame {
 		this.getContentPane().add(panelRadio, c);
 		panelRadio.add(radioAmbos, c);
 
+		JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
+		scrollBar.setMaximum(100);
+		scrollBar.setMinimum(0);
+		scrollBar.setVisibleAmount(0);
+		scrollBar.setValue(50);
+		alpha = 0.50f;
+		scrollBar.addAdjustmentListener(new AdjustmentListener() {
+
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent arg0) {
+
+				alpha = (float) scrollBar.getValue() / 100;
+			}
+		});
+
+		c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.insets = new Insets(5, 5, 5, 5);
+		panelRadio.add(scrollBar, c);
+
 		c = new GridBagConstraints();
 		c.insets = new Insets(10, 10, 10, 10);
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -251,6 +292,10 @@ public class FormTest extends JFrame {
 		radioButtons.add(radioColor);
 		radioButtons.add(radioProfundidad);
 		radioButtons.add(radioAmbos);
+
+		/*
+		 * 
+		 */
 
 		Container contentPane = this.getContentPane();
 		JScrollPane scrollPane = new JScrollPane(contentPane);
@@ -288,14 +333,24 @@ public class FormTest extends JFrame {
 			e.printStackTrace();
 		}
 
+		if (!kinect.isInitialized()) {
+			System.out.println("Falla kinect.");
+			System.exit(1);
+		}
+
 		kinect.setElevationAngle(0);
 	}
 
 	public void actualizar() {
 
-		data = new SensorData(kinect);
+		if (!testing) {
+			data = new SensorData(kinect);
+		} else {
+			data = new SensorDataTesting();
+		}
 
 		BufferedImage imagen = null;
+
 		if (radioColor.isSelected()) {
 			imagen = data.getImagenColor();
 		}
@@ -303,9 +358,31 @@ public class FormTest extends JFrame {
 			imagen = data.getImagenProfundidad();
 		}
 		if (radioAmbos.isSelected()) {
-
+			imagen = both(data.getImagenColor(), data.getImagenProfundidad());
 		}
 
 		labelPrincipalImagen.setIcon(new ImageIcon(imagen));
+	}
+
+	private BufferedImage both(BufferedImage color, BufferedImage profundidad) {
+
+		BufferedImage image = color;
+		BufferedImage overlay = profundidad;
+
+		int w = Math.max(image.getWidth(), overlay.getWidth());
+		int h = Math.max(image.getHeight(), overlay.getHeight());
+		BufferedImage combined = new BufferedImage(w, h,
+				BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = combined.createGraphics();
+		g.drawImage(image, 0, 0, null);
+
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+				alpha);
+		g.setComposite(ac);
+
+		g.drawImage(overlay, 0, 0, null);
+
+		return combined;
 	}
 }
