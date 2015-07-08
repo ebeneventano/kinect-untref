@@ -5,15 +5,20 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.Timer;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
@@ -27,6 +32,9 @@ public class FormTest extends JFrame {
 	private JLabel label_y_value;
 	private JLabel label_color_value;
 	private JLabel label_distancia_value;
+	private JRadioButton radioColor;
+	private JRadioButton radioProfundidad;
+	private JRadioButton radioAmbos;
 
 	public FormTest() {
 
@@ -40,7 +48,7 @@ public class FormTest extends JFrame {
 		this.timer = new Timer();
 		long period = (1 / 10) * 1000;
 		period = 100;
-		this.timer.scheduleAtFixedRate(new Tarea(this), 0, period);
+		// this.timer.scheduleAtFixedRate(new Tarea(this), 0, period);
 
 		this.setVisible(true);
 	}
@@ -105,7 +113,6 @@ public class FormTest extends JFrame {
 		label_x.setText("X");
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 1;
 		c.gridy = 0;
 		this.getContentPane().add(label_x, c);
@@ -118,7 +125,6 @@ public class FormTest extends JFrame {
 		label_y.setText("Y");
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 1;
 		c.gridy = 1;
 		this.getContentPane().add(label_y, c);
@@ -131,7 +137,6 @@ public class FormTest extends JFrame {
 		label_color.setText("Color (R,G,B)");
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 1;
 		c.gridy = 2;
 		this.getContentPane().add(label_color, c);
@@ -144,7 +149,6 @@ public class FormTest extends JFrame {
 		label_distancia.setText("Distancia");
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 1;
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia, c);
@@ -156,7 +160,6 @@ public class FormTest extends JFrame {
 		label_x_value.setHorizontalAlignment(JLabel.CENTER);
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 2;
 		c.gridy = 0;
 		this.getContentPane().add(label_x_value, c);
@@ -168,7 +171,6 @@ public class FormTest extends JFrame {
 		label_y_value.setHorizontalAlignment(JLabel.CENTER);
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 2;
 		c.gridy = 1;
 		this.getContentPane().add(label_y_value, c);
@@ -181,7 +183,6 @@ public class FormTest extends JFrame {
 		label_color_value.setHorizontalAlignment(JLabel.CENTER);
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 2;
 		c.gridy = 2;
 		this.getContentPane().add(label_color_value, c);
@@ -194,10 +195,62 @@ public class FormTest extends JFrame {
 		label_distancia_value.setHorizontalAlignment(JLabel.CENTER);
 
 		c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 2;
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia_value, c);
+
+		/*
+		 * Radio buttons
+		 */
+		JPanel panelRadio = new JPanel(new GridBagLayout());
+		panelRadio.setBorder(BorderFactory
+				.createTitledBorder("Entrada de datos"));
+
+		radioColor = new JRadioButton("Color");
+		radioProfundidad = new JRadioButton("Profundidad");
+		radioAmbos = new JRadioButton("Ambos");
+		radioColor.setFocusPainted(false);
+		radioProfundidad.setFocusPainted(false);
+		radioAmbos.setFocusPainted(false);
+		radioColor.setSelected(true);
+
+		c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.insets = new Insets(5, 5, 5, 5);
+		this.getContentPane().add(panelRadio, c);
+		panelRadio.add(radioColor, c);
+
+		c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.insets = new Insets(5, 5, 5, 5);
+		this.getContentPane().add(panelRadio, c);
+		panelRadio.add(radioProfundidad, c);
+
+		c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.insets = new Insets(5, 5, 5, 5);
+		this.getContentPane().add(panelRadio, c);
+		panelRadio.add(radioAmbos, c);
+
+		c = new GridBagConstraints();
+		c.insets = new Insets(10, 10, 10, 10);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.gridwidth = 2;
+		this.getContentPane().add(panelRadio, c);
+
+		ButtonGroup radioButtons = new ButtonGroup();
+		radioButtons.add(radioColor);
+		radioButtons.add(radioProfundidad);
+		radioButtons.add(radioAmbos);
 
 		Container contentPane = this.getContentPane();
 		JScrollPane scrollPane = new JScrollPane(contentPane);
@@ -242,7 +295,17 @@ public class FormTest extends JFrame {
 
 		data = new SensorData(kinect);
 
-		labelPrincipalImagen
-				.setIcon(new ImageIcon(data.getImagenProfundidad()));
+		BufferedImage imagen = null;
+		if (radioColor.isSelected()) {
+			imagen = data.getImagenColor();
+		}
+		if (radioProfundidad.isSelected()) {
+			imagen = data.getImagenProfundidad();
+		}
+		if (radioAmbos.isSelected()) {
+
+		}
+
+		labelPrincipalImagen.setIcon(new ImageIcon(imagen));
 	}
 }
