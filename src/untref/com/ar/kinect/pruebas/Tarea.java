@@ -7,13 +7,11 @@ public class Tarea extends TimerTask {
 	private FormTest form;
 
 	public Tarea(FormTest form) {
-
 		this.form = form;
 	}
 
 	@Override
 	public void run() {
-
 		form.actualizar();
 	}
 

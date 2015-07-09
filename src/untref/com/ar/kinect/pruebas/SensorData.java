@@ -14,14 +14,11 @@ public class SensorData {
 	private BufferedImage imagenColor;
 	private BufferedImage imagenProfundidad;
 
-	public SensorData() {
-
-	}
+	public SensorData() {}
 
 	public SensorData(Kinect kinect) {
-
 		if (!kinect.isInitialized()) {
-			System.out.println("Falla kinect.");
+			System.out.println("Falla al inicializar la kinect.");
 			System.exit(2);
 		}
 
@@ -31,12 +28,11 @@ public class SensorData {
 		this.width = kinect.getColorWidth();
 		this.height = kinect.getColorHeight();
 
-		this.buildMatrizColor();
-		this.buildMatrizProfundidad();
+		this.construirMatrizColor();
+		this.construirMatrizProfundidad();
 	}
 
-	private void buildMatrizColor() {
-
+	private void construirMatrizColor() {
 		matrizColor = new Color[this.getWidth()][this.getHeight()];
 		imagenColor = new BufferedImage(this.getWidth(), this.getHeight(),
 				BufferedImage.TYPE_3BYTE_BGR);
@@ -44,16 +40,15 @@ public class SensorData {
 		for (int i = 0; i < this.getHeight(); i++) {
 			for (int j = 0; j < this.getWidth(); j++) {
 
+				int posicionInicial = j * 4;
+				
 				int height = this.getWidth() * 4 * i;
-				int blue = j * 4 + height;
-				int green = j * 4 + 1 + height;
-				int red = j * 4 + 2 + height;
-				int alpha = j * 4 + 3 + height;
+				int blue = posicionInicial + height;
+				int green = posicionInicial + 1 + height;
+				int red = posicionInicial + 2 + height;
+				int alpha = posicionInicial + 3 + height;
 
-				Color color = new Color(this.colorFrame[red] & 0xFF,
-						this.colorFrame[green] & 0xFF,
-						this.colorFrame[blue] & 0xFF,
-						this.colorFrame[alpha] & 0xFF);
+				Color color = construirColor(blue, green, red, alpha);
 
 				this.matrizColor[j][i] = color;
 				imagenColor.setRGB(j, i, color.getRGB());
@@ -61,8 +56,14 @@ public class SensorData {
 		}
 	}
 
-	private void buildMatrizProfundidad() {
+	private Color construirColor(int blue, int green, int red, int alpha) {
+		return new Color(this.colorFrame[red] & 0xFF,
+				this.colorFrame[green] & 0xFF,
+				this.colorFrame[blue] & 0xFF,
+				this.colorFrame[alpha] & 0xFF);
+	}
 
+	private void construirMatrizProfundidad() {
 		matrizProfundidad = new float[this.getWidth()][this.getHeight()];
 		imagenProfundidad = new BufferedImage(this.getWidth(),
 				this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
@@ -75,9 +76,8 @@ public class SensorData {
 
 				float max = 30000;
 				float min = 7000;
-				float hue;
 
-				Color color = null;
+				Color color;
 				if (depth[z] == 0) {
 					color = Color.gray;
 				} else if (depth[z] > max) {
@@ -85,7 +85,7 @@ public class SensorData {
 				} else if (depth[z] < min) {
 					color = Color.white;
 				} else {
-					hue = (1 / (max - min)) * (depth[z] - min);
+					float hue = (1 / (max - min)) * (depth[z] - min);
 					color = new Color(Color.HSBtoRGB(hue, 1.0f, 1.0f));
 				}
 
@@ -96,32 +96,26 @@ public class SensorData {
 	}
 
 	private int getWidth() {
-
 		return this.width;
 	}
 
 	private int getHeight() {
-
 		return this.height;
 	}
 
 	public Color getColorEnPixel(int x, int y) {
-
 		return matrizColor[x][y];
 	}
 
 	public float getDistancia(int x, int y) {
-
 		return matrizProfundidad[x][y];
 	}
 
 	public BufferedImage getImagenColor() {
-
 		return imagenColor;
 	}
 
 	public BufferedImage getImagenProfundidad() {
-
 		return imagenProfundidad;
 	}
 }

@@ -18,28 +18,23 @@ public class SensorDataTesting extends SensorData {
 			color = ImageIO.read(new File("heat-bikini-orig.jpg"));
 			profundidad = ImageIO.read(new File("heat-bikini-alpha.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public Color getColorEnPixel(int x, int y) {
-
 		return new Color(color.getRGB(x, y));
 	}
 
 	public float getDistancia(int x, int y) {
-
 		return 0;
 	}
 
 	public BufferedImage getImagenColor() {
-
 		return color;
 	}
 
 	public BufferedImage getImagenProfundidad() {
-
 		return profundidad;
 	}
 

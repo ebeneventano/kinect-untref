@@ -69,12 +69,8 @@ public class FormTest extends JFrame {
 		this.setContentPane(new JPanel(new GridBagLayout()));
 		GridBagConstraints c;
 
-		/*
-		 * Imagen
-		 */
 		JPanel panelImagen = new JPanel(new GridBagLayout());
 		panelImagen.setPreferredSize(new Dimension(640 + 20, 480 + 20));
-		// panelImagen.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		labelPrincipalImagen = new JLabel();
 		labelPrincipalImagen.setBorder(BorderFactory
@@ -95,7 +91,6 @@ public class FormTest extends JFrame {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
 			}
 
 			@Override
@@ -106,24 +101,17 @@ public class FormTest extends JFrame {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
 			}
 		});
 
-		/*
-		 * Info
-		 */
-		// X
 		JLabel label_x = new JLabel();
 		label_x.setPreferredSize(new Dimension(100, 50));
 		label_x.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -135,7 +123,6 @@ public class FormTest extends JFrame {
 		c.gridy = 0;
 		this.getContentPane().add(label_x, c);
 
-		// Y
 		JLabel label_y = new JLabel();
 		label_y.setPreferredSize(new Dimension(100, 50));
 		label_y.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -147,7 +134,6 @@ public class FormTest extends JFrame {
 		c.gridy = 1;
 		this.getContentPane().add(label_y, c);
 
-		// Color
 		JLabel label_color = new JLabel();
 		label_color.setPreferredSize(new Dimension(100, 50));
 		label_color.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -159,7 +145,6 @@ public class FormTest extends JFrame {
 		c.gridy = 2;
 		this.getContentPane().add(label_color, c);
 
-		// Distancia
 		JLabel label_distancia = new JLabel();
 		label_distancia.setPreferredSize(new Dimension(100, 50));
 		label_distancia.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -171,7 +156,6 @@ public class FormTest extends JFrame {
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia, c);
 
-		// X-value
 		label_x_value = new JLabel();
 		label_x_value.setPreferredSize(new Dimension(100, 50));
 		label_x_value.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -182,7 +166,6 @@ public class FormTest extends JFrame {
 		c.gridy = 0;
 		this.getContentPane().add(label_x_value, c);
 
-		// Y-value
 		label_y_value = new JLabel();
 		label_y_value.setPreferredSize(new Dimension(100, 50));
 		label_y_value.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -193,7 +176,6 @@ public class FormTest extends JFrame {
 		c.gridy = 1;
 		this.getContentPane().add(label_y_value, c);
 
-		// Color-value
 		label_color_value = new JLabel();
 		label_color_value.setPreferredSize(new Dimension(100, 50));
 		label_color_value
@@ -205,7 +187,6 @@ public class FormTest extends JFrame {
 		c.gridy = 2;
 		this.getContentPane().add(label_color_value, c);
 
-		// Distancia-value
 		label_distancia_value = new JLabel();
 		label_distancia_value.setPreferredSize(new Dimension(100, 50));
 		label_distancia_value.setBorder(BorderFactory
@@ -217,9 +198,6 @@ public class FormTest extends JFrame {
 		c.gridy = 3;
 		this.getContentPane().add(label_distancia_value, c);
 
-		/*
-		 * Radio buttons
-		 */
 		JPanel panelRadio = new JPanel(new GridBagLayout());
 		panelRadio.setBorder(BorderFactory
 				.createTitledBorder("Entrada de datos"));
@@ -257,7 +235,7 @@ public class FormTest extends JFrame {
 		this.getContentPane().add(panelRadio, c);
 		panelRadio.add(radioAmbos, c);
 
-		JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
+		final JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
 		scrollBar.setMaximum(100);
 		scrollBar.setMinimum(0);
 		scrollBar.setVisibleAmount(0);
@@ -293,10 +271,6 @@ public class FormTest extends JFrame {
 		radioButtons.add(radioProfundidad);
 		radioButtons.add(radioAmbos);
 
-		/*
-		 * 
-		 */
-
 		Container contentPane = this.getContentPane();
 		JScrollPane scrollPane = new JScrollPane(contentPane);
 		scrollPane.setBorder(null);
@@ -329,12 +303,11 @@ public class FormTest extends JFrame {
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		if (!kinect.isInitialized()) {
-			System.out.println("Falla kinect.");
+			System.out.println("Falla al inicializar la kinect.");
 			System.exit(1);
 		}
 
