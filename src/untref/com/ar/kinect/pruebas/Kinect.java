@@ -4,6 +4,11 @@ import edu.ufl.digitalworlds.j4k.J4KSDK;
 
 public class Kinect extends J4KSDK {
 
+	public Kinect() {
+		setColorResolution(640, 480);
+		setDepthResolution(640, 480);
+	}
+	
 	@Override
 	public void onColorFrameEvent(byte[] arg0) {
 		

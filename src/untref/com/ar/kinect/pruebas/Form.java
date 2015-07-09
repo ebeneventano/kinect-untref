@@ -26,7 +26,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
-public class FormTest extends JFrame {
+public class Form extends JFrame {
 
 	private Kinect kinect;
 	private Timer timer;
@@ -42,22 +42,21 @@ public class FormTest extends JFrame {
 	private float alpha;
 	private boolean testing;
 
-	public FormTest() {
-
-		testing = true;
+	public Form(Boolean esTest) {
+		testing = esTest;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setupUI();
 		this.pack();
 
-		if (!testing)
+		if (!testing) {
 			setupKinect();
+		}
 
 		this.setVisible(true);
 	}
 
 	public void start() {
-
 		this.timer = new Timer();
 		long period = (1 / 10) * 1000;
 		period = 100;
@@ -289,35 +288,44 @@ public class FormTest extends JFrame {
 	}
 
 	private void setupKinect() {
+		construirKinect();
+		startKinect();
+		esperarUmbralInicioKinect();
+		chequearInicializacionKinect();
+		setearAnguloDeElevacionDefault();
+	}
 
-		kinect = new Kinect();
+	private void setearAnguloDeElevacionDefault() {
+		kinect.setElevationAngle(0);
+	}
 
-		// kinect.stop();
-		kinect.setColorResolution(640, 480);
-		kinect.setDepthResolution(640, 480);
+	private void chequearInicializacionKinect() {
+		if (!kinect.isInitialized()) {
+			System.out.println("Falla al inicializar la kinect.");
+			System.exit(1);
+		}
+	}
 
-		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ
-				| Kinect.PLAYER_INDEX);
-
-		// Espera para el encendido
+	private void esperarUmbralInicioKinect() {
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
 
-		if (!kinect.isInitialized()) {
-			System.out.println("Falla al inicializar la kinect.");
-			System.exit(1);
-		}
+	private void construirKinect() {
+		kinect = new Kinect();
+	}
 
-		kinect.setElevationAngle(0);
+	private void startKinect() {
+		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ
+				| Kinect.PLAYER_INDEX);
 	}
 
 	public void actualizar() {
-
 		if (!testing) {
-			data = new SensorData(kinect);
+			data = new SensorDataProduction(kinect);
 		} else {
 			data = new SensorDataTesting();
 		}

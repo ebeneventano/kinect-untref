@@ -4,9 +4,9 @@ import java.util.TimerTask;
 
 public class Tarea extends TimerTask {
 
-	private FormTest form;
+	private Form form;
 
-	public Tarea(FormTest form) {
+	public Tarea(Form form) {
 		this.form = form;
 	}
 
